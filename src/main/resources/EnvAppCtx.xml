@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+
+	<!-- 
+	Environment객체를 사용하지 않고 XML 설정파일에서 바로 외부파일을
+	가져오기 위해 context 네임스페이스를 추가한다. 파일 생성시 추가할 수 있고,
+	추가 후 <context 태그를 사용할 수 있다.
+	-->
+	<context:property-placeholder
+		location="classpath:EnvUser1.properties, classpath:EnvUser2.properties" />
+	<!-- 
+		context 엘리먼트에서 프로퍼티 파일의 경로를 지정하여 읽을 준비를 한다.
+		파일이 2개 이상인 경우 콤마로 구분하면 된다.
+	-->
+	
+	
+	<!-- 
+		bean태그를 java코드로 옮기면 아래와 같다.
+		import env.UserConnection;
+		userConnection userConnection = new UserConnection();
+		즉 bean태그는 class에 지정된 클래스를 통해 객체를 생성한다.
+		이때 참조변수는 id속성에 지정한다.
+	-->
+	<bean id="userConnection" class="env.UserConnection">
+		<!-- property태그에서는 해당 객체의 멤버변수에 값을 지정한다. -->
+		<property name="mainUserId">
+			<value>${mainUser.id}</value>
+		</property>
+		<property name="mainUserPw">
+			<value>${mainUser.pw}</value>
+		</property>
+		<property name="subUserId">
+			<value>${subUser.id}</value>
+		</property>
+		<property name="subUserPw">
+			<value>${subUser.pw}</value>
+		</property>
+	</bean>
+
+</beans>
