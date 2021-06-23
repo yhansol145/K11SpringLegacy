@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd"> 
+	
+	<!--  
+	아래 bean태그를 Java코드로 표현하면 import id.Point;
+	Point pointXY = new Point(3,4);
+	즉, Point객체를 3,4를 통해 초기값으로 생성한다.
+	-->
+	<bean id="pointXY" class="di.Point">
+		<constructor-arg value="3" /> <!-- 생성자의 첫번째 인자값 -->
+		<constructor-arg> <!-- 생성자의 두번째 인자값 -->
+			<value>4</value>
+		</constructor-arg>
+	</bean> 
+	
+	<!--  
+	Circle객체를 생성 시 앞에서 생성한 Point객체를 참조값으로 사용한다.
+	또한 <property>는 setter()를 통한 초기화를 진행한다.
+	-->
+	<bean id="circle" class="di.Circle">
+		<property name="point"> <!-- 멤버변수 point를 setter를 통해 초기화 -->
+			<ref bean="pointXY" /> <!-- 앞에서 생성한 pointXY를 초기값으로 사용 -->
+		</property>
+		<property name="radian" value="20" />
+	</bean>
+
+</beans>
