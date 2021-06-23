@@ -1,6 +1,8 @@
 package com.kosmo.k11springlegacy;
 
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import env.BoardConnection;
+import env.EnvApplicationConfig;
 import env.UserConnection;
 
 @Controller
@@ -82,6 +86,40 @@ public class EnvironmentController {
 		model.addAttribute("subUserPw", userCon.getSubUserPw());
 		
 		return "05Environment/main2";
+	}
+	
+	/*
+	외부파일읽기3 : 어노테이션을 이용한 외부파일 참조. XML설정파일 대신
+		EnvApplicationConfig 클래스를 이용하여 외부파일을 읽어온다.
+	 */
+	@RequestMapping("/environment/main3")
+	public String main3(Model model) {
+		
+		//어노테이션 기반 스프링 컨테이너 생성
+		AnnotationConfigApplicationContext ctx = new
+				AnnotationConfigApplicationContext(
+						EnvApplicationConfig.class);
+		
+		//설정파일에서 생성한 빈 주입받기
+		BoardConnection bConn = 
+				ctx.getBean("boardConfig", BoardConnection.class);
+		/*
+		어노테이션을 통해 XML설정 파일을 대체하는 경우 @Bean을 붙인
+		메소드명이 빈의 참조변수가 된다.
+		
+			@Bean
+			public BoardConnection boardConfig() {
+				==> BoardConnection boardConfig = new BoardConnection()
+					와 동일한 의미를 가진다.
+		 */
+		
+		//모델 객체에 저장 후 뷰 호출
+		model.addAttribute("id", bConn.getUser());
+		model.addAttribute("pass", bConn.getPass());
+		model.addAttribute("driver", bConn.getDriver());
+		model.addAttribute("url", bConn.getUrl());
+		
+		return "05Environment/main3";
 	}
 
 }
